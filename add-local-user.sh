@@ -28,17 +28,42 @@ echo "${PASSWORD}"
 
 useradd	-m ${USER_NAME}	
 
-passwd --stdin ${USER_NAME} | ${PASSWORD}
 
 # check	to see if the useradd command succeeded
 
-
+if [[ "${?}" -ne 0 ]]
+then
+	echo "The ${USER_NAME} user was not added."
+	exit 1
+fi
 
 # set the password
 
+if [[ "${?}" -ne 0 ]]
+then
+	echo "The password did not work."
+	exit 1
+else
+	echo ${PASSWORD} | passwd ${USER_NAME}
+fi
+
 # check	to see if the passwd command succeeded
+
+if [[ "${?}" -eq 0 ]]
+then
+        echo "The password was configured accordingly."
+fi
 
 # force	password change	on first login
 
+passwd -e ${USER_NAME}
+
+
 # display the username,	password, and the host where the user was created
+
+echo 'username: '
+echo "${USER_NAME}"
+echo 
+echo 'password: '
+echo "${PASSWORD}"
 
